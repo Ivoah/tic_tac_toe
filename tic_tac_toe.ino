@@ -22,8 +22,11 @@ int board[3][3] = {
 int WIDTH;
 int HEIGHT;
 
-int pos;
-int opos;
+int posX;
+int oposX;
+
+int posO;
+int oposO;
 
 void setup() {
   pinMode(A0, INPUT);
@@ -35,17 +38,27 @@ void setup() {
   WIDTH = tft.width();
   HEIGHT = tft.height();
   
-  pos = analogRead(A0);
-  opos = !pos;
+  posX = analogRead(A0);
+  oposX = !posX;
+  
+  posO = analogRead(A5);
+  oposO = !posO;
   
   tft.fillScreen(ILI9340_BLACK);
 }
 
 void loop() {
-  pos = map(analogRead(A0), 0, 1023, 0, 9);
-  if (pos != opos) { board[opos / 3][opos % 3] = 0; opos = pos; }
-  board[pos / 3][pos % 3] = 1;
+  
+  posX = map(analogRead(A0), 0, 1023, 0, 9);
+  if (posX != oposX) { board[oposX / 3][oposX % 3] = 0; oposX = posX; }
+  board[posX / 3][posX % 3] = 1;
+  
+  posO = map(analogRead(A5), 0, 1023, 0, 9);
+  if (posO != oposO) { board[oposO / 3][oposO % 3] = 0; oposO = posO; }
+  board[posO / 3][posO % 3] = 2;
+  
   drawBoard();
+  
 }
 
 void drawBoard() {
@@ -58,11 +71,12 @@ void drawBoard() {
   
   for (int y = 0; y < 3; y++) {
     for (int x = 0; x < 3; x++) {
-      tft.fillRect(WIDTH/2 - 50 - 25/2 + x*50, HEIGHT/2 - 50 - 25/2 + y*50, 25, 25, ILI9340_BLACK);
       if (board[y][x] == 1) {
         drawX(WIDTH/2 - 50 + x*50, HEIGHT/2 - 50 + y*50, 25, 25, ILI9340_GREEN);
       } else if (board[y][x] == 2) {
         tft.drawCircle(WIDTH/2 - 50 + x*50, HEIGHT/2 - 50 + y*50, 25/2, ILI9340_GREEN);
+      } else {
+        tft.fillRect(WIDTH/2 - 50 - 25/2 + x*50, HEIGHT/2 - 50 - 25/2 + y*50, 25, 25, ILI9340_BLACK);
       }
     }
   }
