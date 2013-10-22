@@ -32,6 +32,7 @@ void setup() {
   pinMode(A0, INPUT);
   pinMode(A3, INPUT);
   pinMode(A5, INPUT);
+  Serial.begin(9600);
   tft.begin();
   tft.setRotation(map(analogRead(A3), 0, 1023, 0, 3)); // Rotate the screen depending on the value of A3
   
@@ -49,11 +50,15 @@ void setup() {
 
 void loop() {
   
-  posX = map(analogRead(A0), 0, 1023, 0, 9);
+  Serial.println(analogRead(A0));
+  Serial.println(analogRead(A5));
+  Serial.println();
+  
+  posX = map(analogRead(A0), 0, 1020, 0, 8);
   if (posX != oposX) { board[oposX / 3][oposX % 3] = 0; oposX = posX; }
   board[posX / 3][posX % 3] = 1;
   
-  posO = map(analogRead(A5), 0, 1023, 0, 9);
+  posO = map(analogRead(A5), 0, 1020, 0, 8);
   if (posO != oposO) { board[oposO / 3][oposO % 3] = 0; oposO = posO; }
   board[posO / 3][posO % 3] = 2;
   
